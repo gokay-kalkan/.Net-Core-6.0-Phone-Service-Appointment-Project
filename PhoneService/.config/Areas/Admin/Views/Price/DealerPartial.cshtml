@@ -1,0 +1,11 @@
+﻿
+<option value="">Dealer Select</option>
+
+@if (ViewBag.dealer != null)
+{
+    @foreach (var item in ViewBag.dealer)
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+
+}

@@ -1,0 +1,177 @@
+﻿@model PhoneService.Dtos.AppointmentDtos.AppointmentCreateDto
+@{
+    ViewData["Title"] = "Step2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<body>
+    <!-- Start Navbar Section -->
+ @*   <div class="navbar-area">
+        <div class="macro-responsive-nav">
+            <div class="container">
+                <div class="macro-responsive-menu">
+                    <div class="logo">
+                        <a href="index.html">
+                            <img src="assets/img/logo.png" class="white-logo" alt="logo" />
+                            <img src="assets/img/logo-black.png"
+                                 class="black-logo"
+                                 alt="logo" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="macro-nav">
+            <div class="container">
+                <nav class="navbar navbar-expand-md navbar-light">
+                    <a class="navbar-brand" href="index.html">
+                        <img src="assets/img/logo.png" class="white-logo" alt="logo" />
+                        <img src="assets/img/logo-black.png"
+                             class="black-logo"
+                             alt="logo" />
+                    </a>
+                    <div class="collapse navbar-collapse mean-menu"
+                         id="navbarSupportedContent">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a href="index.html" class="nav-link">
+                                    Home <i class="fas fa-chevron-down"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="about.html" class="nav-link">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    Services <i class="fas fa-chevron-down"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">Services One</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">Services Two</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">Services Three</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="contact.html" class="nav-link">Contact</a>
+                            </li>
+                        </ul>
+                        <div class=" ">
+                            <a class="default-btn" href="#0">Book a Repair <span></span></a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>*@
+    <!-- End Navbar Section -->
+    <!-- Start Services Details Section -->
+    <section class="services-details-area section-padding pt-60">
+        <div class="container">
+            <div class="row pt-40">
+                <div class="col-lg-8 col-md-12">
+                    <form method="post" asp-action="Step2" asp-controller="Appointment">
+                    <div class="services-details-content">
+                        <h2>What kind of phone is it?</h2>
+                        <h3>You’re in good hands—we do 50,000 repairs every month.</h3>
+
+                        <div class="features-text pt-30">
+                           
+                            <ul class="service-features-list">
+                                @foreach(var problem in ViewBag.problems)
+                                {
+                                    
+                                
+                                <li>
+                                            <input class="checkbox-input" type="checkbox" id="selectedProblemId" name="selectedProblems" value="@problem.Value" />
+                 
+                                        <label style="margin-left: 5px;" for="vehicle1">@problem.Text</label>
+                                    </li>
+
+                                        
+                                }
+                               
+                            </ul>
+                                <p class="text-danger">Price of: <span id="SelectedProblemPrice"></span></p>
+
+                            <p>
+                                Is this device covered by a protection plan? <a><span>Start a claim</span></a> for the best price. <br>
+                                Have questions? <a><span>Learn more.</span></a>
+                            </p>
+
+                        </div>
+                        <div class="  pt-30">
+                            <a class="default-btn2" href="index.html">&larr; Back<span></span></a>
+                            <button class="default-btn" style="margin-left: 5rem;" type="submit">Next &rarr;<span></span></button>
+                        </div>
+                          </form>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <aside class="services-widget">
+                        <section class="widget widget_categories">
+                            <img src="assets/img/ip14.png" style="width: 35%;">
+                            <span style="margin-left:10px"><b>Apple iPhone 14</b></span>
+                            <div class="pt-30" style="border-bottom: 2px solid #7a7a7a3d"></div>
+                            <h5 class="pt-30">Visit details</h5>
+                            <ul class="footer-contact-list">
+                                <li>
+                                    <i class="fa fa-location-dot"></i>&emsp; Store location
+                                </li>
+                                <li>
+                                    <i class="fa fa-calendar"></i>&emsp; Date and time
+                                </li>
+                                <li>
+                                    <i class="fa fa-comment"></i>&emsp; Contact details
+                                </li>
+                            </ul>
+                            <div class="pt-30" style="border-bottom: 2px solid #7a7a7a3d"></div>
+
+                        </section>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    <div class="go-top">
+        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+            // Tüm checkboxları bul
+            var checkboxes = $('input[type="checkbox"]');
+
+            checkboxes.on('change', function () {
+                // Seçilen checkbox'ın değerini al
+                var selectedProblemId = $(this).val();
+
+                // Diğer tüm checkbox'ları iptal et
+                checkboxes.not(this).prop('checked', false);
+
+                // Seçilen checkbox'ın değerini AJAX isteği ile al
+                $.ajax({
+                    url: "/Appointment/UpdateSelectedProblemPrice",
+                    type: "POST",
+                    data: { selectedProblemId: selectedProblemId },
+                    success: function (price) {
+                        // Fiyatı sayfada görüntüle
+                        $("#SelectedProblemPrice").text(price);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>

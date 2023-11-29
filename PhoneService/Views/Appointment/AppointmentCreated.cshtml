@@ -1,0 +1,130 @@
+﻿@model PhoneService.Entities.Appointment
+@{
+    ViewData["Title"] = "AppointmentCreated";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="services-details-area section-padding pt-60">
+    <div class="container">
+        <div class="row pt-40">
+            <div class="col-lg-8 col-md-12">
+                <!-- 100% body table -->
+                <table cellspacing="0" border="0" cellpadding="0" width="100%"
+                      @* style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">*@
+                    <tr>
+                        <td>
+                            <table style=" margin:0 auto;" width="100%" border="0"
+                                   align="center" cellpadding="0" cellspacing="0">
+
+                                <tr>
+                                    <td>
+                                        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0"
+                                               style="max-width:670px; background:#fff; border-radius:3px; text-align:center;">
+                                            <tr>
+                                                <td style="height:40px;">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding:0 35px;">
+                                                    <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You’re all set, asd. See you soon!</h1>
+                                                    <p style="font-size:15px; color:#455056; margin:8px 0 0; line-height:24px;">
+                                                        We sent a confirmation email and text.<br><strong>See you soon!</strong>.
+                                                    </p>
+                                                    <span style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
+                                                    <p style="color:#455056; font-size:18px;line-height:20px; margin:0; font-weight: 500;">
+                                                        <strong style="display: block;font-size: 13px; margin: 0 0 4px; color:rgba(0,0,0,.64); font-weight:normal;">Appointment Code:</strong>@Model.AppointmentNumber
+                                                    </p>
+
+                                                    <a class="default-btn pt-30" style="margin:20px 0 auto" href="index.html">RETURN<span></span></a>
+
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height:40px;">&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <!--/100% body table-->
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <aside class="services-widget">
+                    <section class="widget widget_categories">
+                        <img src="assets/img/ip14.png" style="width: 35%;">
+                        <span style="margin-left:10px"><b>@Model.Brand.Name @Model.Model.Name</b></span>
+                        <div class="pt-30" style="border-bottom: 2px solid #7a7a7a3d"></div>
+                        <h5 class="pt-30">Pricing detail</h5>
+                    @*    <p>Estimated screen repair cost &emsp;&emsp; @Model.Price </p>*@
+                        <p>
+                            <b>No payment until after the repair</b> <br>
+                            we'll diagnose it for free, then go through your options.
+                        </p>
+
+                        <div class="pt-20" style="border-bottom: 2px solid #7a7a7a3d"></div>
+                        <h5 class="pt-30">Visit details</h5>
+                        <ul class="footer-contact-list">
+                            <li>
+                                <i class="fa fa-location-dot"></i>&emsp; Store location
+                            </li>
+                            <p>
+                                <b>@Model.Dealer.Name</b><br>
+                                <br>
+                                <br>
+                               @Model.City.Name 
+                            </p>
+                            <li>
+                                <i class="fa fa-calendar"></i>&emsp; Date and time
+                                <p>
+                                    <b>Tue, Oct 10, 2023</b><br>
+                                    10am-11am
+                                </p>
+                            </li>
+                            <li>
+                                <i class="fa fa-comment"></i>&emsp; Contact details
+                            </li>
+                            <p>
+                                <b>asd dsf</b> <br>
+                                asdf@ero.com <br>
+                                555-111-2255
+                            </p>
+                        </ul>
+                        <div class="pt-30" style="border-bottom: 2px solid #7a7a7a3d"></div>
+
+                    </section>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+@*
+<div class="container mt-20">
+    <div class="row mt-20">
+        <div class="col-md-8">
+            <h2>Kaydınız Başarıyla Oluşturuldu... Sizinle İletişime Geçeceğiz</h2>
+            <h4>@Model.CustomerEmail adresinize bilgilendirme mesajı gönderildi.</h4>
+            <hr />
+            <p>Randevu Numaranız: @Model.AppointmentNumber</p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="jumbotron">
+                <div>
+                    <p>Telefon Marka: @Model.Brand.Name -  Model @Model.Model.Name</p>
+                    <br />
+                    <p>Fiyat: @Model.Price</p>
+
+                    <br />
+                    <br />
+                    <p>Şehir: @Model.City.Name - Bayi: @Model.Dealer.Name
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+*@

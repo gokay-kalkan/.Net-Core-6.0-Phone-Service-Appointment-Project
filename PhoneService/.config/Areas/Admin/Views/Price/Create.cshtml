@@ -1,0 +1,88 @@
+﻿@model PhoneService.Dtos.PriceDtos.PriceCreateDto 
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <form method="post" asp-antiforgery="true">
+
+                        <label>Price Value</label>
+                        <input type="text" asp-for="PriceValue" class="form-control" />
+                        <span asp-validation-for="PriceValue" class="text-danger"></span>
+                        <br />
+
+                        <label>City</label>
+                        <select asp-for="CityId" id="CityId" class="form-control">
+                            <option value="0" selected>Please City Select</option>
+
+                            @foreach (var item in ViewBag.cities)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        </select>
+                        <br />
+
+                        <label>Dealer</label>
+
+                        <select id="DealerId" asp-for="DealerId" class="form-control">
+                            <option value="0" selected>Please Dealer Select</option>
+
+                            <option value="DealerId"></option>
+
+
+                        </select>
+                        <br />
+
+                        <label>Problem</label>
+                        <select asp-for="ProblemId" id="ProblemId" class="form-control">
+                            <option value="0" selected>Please Problem Select</option>
+
+                            @foreach (var item in ViewBag.problems)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        </select>
+                        <br />
+
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Admin/vendor/jquery/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#CityId").change(function () {
+            var cityId = $(this).val();
+
+            debugger
+
+            $.ajax({
+                type: "Post",
+                url: "/Admin/Price/DealerGet?CityId=" + cityId,
+                contentType: "html",
+
+                success: function (response) {
+
+
+                    $("#DealerId").empty();
+                    $("#DealerId").append(response);
+                }
+            });
+
+        });
+
+    });
+</script>

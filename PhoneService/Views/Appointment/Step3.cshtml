@@ -1,0 +1,441 @@
+﻿@model PhoneService.Dtos.AppointmentDtos.AppointmentCreateDto
+@{
+    ViewData["Title"] = "Step3";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    @*<script src="~/celloria/assets/js/jquery.min.js"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.6/dist/flatpickr.min.js" integrity="sha256-BSZ2gjTJLE5ZEGH1e6beyHYNOITz6M26XFre9lEBdx8=" crossorigin></script>
+    <link href="https://cdn.jsdelivr.net/gh/djibe/material@4.6.2-1.0/css/material-plugins.min.css" rel="stylesheet" crossorigin>
+
+</head>
+
+    <body>
+        <section class="services-details-area section-padding pt-60">
+            <div class="container">
+                <div class="row pt-40">
+                    <div class="col-lg-8 col-md-12 ">
+
+                        <form method="post" asp-action="Step3">
+                        <div class="form-group ">
+                            <label for="AppointmentDate">Randevu Tarihi:</label>
+                            <input type="text" data-provide="datepicker" class="flatpickr" id="AppointmentDate" name="AppointmentDate" asp-for="AppointmentDate" asp-format="{0:yyyy-MM-dd}" onchange="updateAppointmentTimes()" />
+                        </div>
+                        <div class="form-group ">
+                            <label for="AppointmentTime">Randevu Saati:</label>
+                            @*<input type="text" class="flatpickr" id="AppointmentTime" name="AppointmentTime" asp-for="AppointmentTime" data-enable-time="true" data-no-calendar="true" data-date-format="H:i" />*@
+                            <select id="AppointmentTime" name="AppointmentTime" asp-for="AppointmentTime" disabled>
+                                <!-- JavaScript ile saatler buraya eklenecek -->
+                            </select>
+                        </div>
+                            <button type="submit" class="btn btn-primary">Next</button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </body>
+
+
+<script>
+    $(document).ready(function () {
+        flatpickr('.flatpickr', {
+            minDate: "today",
+        });
+
+        // Sayfa yüklendiğinde ve tarih değiştiğinde saatleri güncelleyin
+        window.addEventListener("load", updateAppointmentTimes);
+        document.getElementById("AppointmentDate").addEventListener("change", updateAppointmentTimes);
+    });
+
+    function updateAppointmentTimes() {
+        // Seçilen tarihi al
+        var selectedDate = document.getElementById("AppointmentDate").value;
+
+        // Eğer tarih seçilmemişse, saat seçimi alanını temizleyin
+        if (!selectedDate) {
+            document.getElementById("AppointmentTime").innerHTML = "<option value=''>Lütfen tarih seçin</option>";
+            document.getElementById("AppointmentTime").disabled = true;
+            return;
+        }
+
+        // AJAX isteği ile uygun saatleri kontrol et
+        $.ajax({
+            url: "/Appointment/CheckAvailableTimes",
+            type: "GET",
+            data: { selectedDate: selectedDate },
+            success: function (availableTimes) {
+                var startTime = 9;
+                var endTime = 19;
+
+                var timeSelect = document.getElementById("AppointmentTime");
+                timeSelect.innerHTML = "";
+
+                // Uygun saatleri seçeneklere ekleyin
+                for (var hour = startTime; hour <= endTime; hour++) {
+                    for (var minute = 0; minute < 60; minute += 15) {
+                        var formattedHour = hour.toString().padStart(2, '0');
+                        var formattedMinute = minute.toString().padStart(2, '0');
+                        var timeOption = document.createElement("option");
+                        var timeValue = formattedHour + ":" + formattedMinute;
+
+                        // Eğer bu saat uygunsa (availableTimes içinde bulunuyorsa) seçilebilir yapın
+                        if (availableTimes.includes(timeValue)) {
+                            timeOption.value = timeValue;
+                            timeOption.text = timeValue;
+                            timeSelect.appendChild(timeOption);
+                        }
+                    }
+                }
+
+                timeSelect.disabled = timeSelect.options.length === 0; // Saatler yoksa saat seçimini devre dışı bırak
+            },
+            error: function () {
+                // Hata yönetimi
+            }
+        });
+    }
+</script>
+
+
+
+@*<section class="services-details-area section-padding pt-60">
+    <div class="container">
+        <div class="row pt-40">
+            <div class="col-lg-5 col-md-12">
+                <!--calendar-->
+                <div class="giz-calendar">
+                    <div class="giz-calendar-header">
+                        <div>
+                            <button>
+                                <span class="giz-calendar-title">Tue, 10 Oct</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="giz-calendar-content">
+                        <div class="giz-calendar-title-switch">
+                            <div>
+                                <button class="giz-button-rounded">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                            </div>
+                            <div class="giz-calendar-title-slide">Oct 2023</div>
+                            <div>
+                                <button class="giz-button-rounded">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="calendar-hide">
+                            <div class="giz-calendar-weekday">
+                                <div>Sun</div>
+                                <div>Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                                <div>Sat</div>
+                            </div>
+                            <div class="giz-calendar-day">
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">1</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">2</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">3</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">4</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">5</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">6</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">7</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">8</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">9</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button class="active">
+                                        <span class="giz-calendar-day-count">10</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">11</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">12</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">13</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">14</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">15</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">16</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">17</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">18</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">19</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">20</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">21</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">22</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">23</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">24</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">25</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">26</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">27</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">28</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">29</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-day-count">30</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--calendar month-->
+                        <div class="hide calendar-show">
+                            <div class="giz-calendar-month">
+                                <div>
+                                    <button class="active">
+                                        <span class="giz-calendar-month-count">Jan</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Feb</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Mar</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Apr</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">May</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Jun</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Jul</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Aug</span>
+                                    </button>
+                                @*</div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Sep</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Oct</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Nov</span>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button>
+                                        <span class="giz-calendar-month-count">Dec</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="giz-calendar-action">
+@*                   <div><button>CANCEL</button></div>
+                                <div><button>OK</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/calendar-->
+            </div>
+            <div class="col-lg-3 col-md-12">
+                <!--timepicker-->
+                <div class="time-picker">
+                    <div class="time-picker-header">
+                        <button>
+                            <span class="time-picker-title time-picker-hours">10</span>
+                        </button>
+                        <div><span class="time-picker-title">:</span></div>
+                        <button>
+                            <span class="time-picker-title time-picker-minute">10</span>
+                        </button>
+                    </div>
+                    <div class="time-picker-content">
+                        <div class="shade">
+                            <button><i class="fas fa-angle-up icon-size"></i></button>
+
+                            <input type="text"
+                                   value="10"
+                                   min="1"
+                                   max="12"
+                                   maxlength="2" />
+
+                            <button><i class="fas fa-angle-down icon-size"></i></button>
+                        </div>
+                        <div>
+                            <span class="time-picker-separator">:</span>
+                        </div>
+                        <div class="shade">
+                            <button><i class="fas fa-angle-up icon-size"></i></button>
+
+                            <input type="text"
+                                   value="10"
+                                   min="0"
+                                   max="59"
+                                   maxlength="2" />
+
+                            <button><i class="fas fa-angle-down icon-size"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <!--/timepicker-->
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <aside class="services-widget">
+                    <section class="widget widget_categories">
+                        <img src="assets/img/ip14.png" style="width: 35%" />
+                        <span style="margin-left: 10px"><b>Apple iPhone 14</b></span>
+                        <div class="pt-30"
+                             style="border-bottom: 2px solid #7a7a7a3d"></div>
+                        <h5 class="pt-30">Visit details</h5>
+                        <ul class="footer-contact-list">
+                            <li>
+                                <i class="fa fa-location-dot"></i>&emsp; Store location
+                            </li>
+                            <li><i class="fa fa-calendar"></i>&emsp; Date and time</li>
+                            <li><i class="fa fa-comment"></i>&emsp; Contact details</li>
+                        </ul>
+                        <div class="pt-30"
+                             style="border-bottom: 2px solid #7a7a7a3d"></div>
+                    </section>
+                </aside>
+            </div>
+            <div class="col-lg-8 col-md-12">
+                <div class="  pt-30">
+                    <a class="default-btn2" href="service-app.html">&larr; Back<span></span></a>
+                    <a class="default-btn" style="margin-left: 5rem;" href="service-app-3.html">Next &rarr;<span></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>*@*
+

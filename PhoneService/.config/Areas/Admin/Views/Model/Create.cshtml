@@ -1,0 +1,38 @@
+﻿@model PhoneService.Dtos.ModelDtos.ModelCreateDto
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/AdminLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <form method="post" asp-antiforgery="true">
+
+                        <label>Model Name</label>
+                        <input type="text" asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <br />
+
+                        <label>Brand</label>
+                        <select asp-for="BrandId" id="BrandId" class="form-control">
+                            <option value="0" selected>Please Brand Select</option>
+
+                            @foreach (var item in ViewBag.brands)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+                        </select>
+                        <br />
+
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
